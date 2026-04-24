@@ -61,9 +61,13 @@ async function refreshSnapshot() {
     applySnapshot(await response.json());
   } catch (error) {
     appState.connection = "offline";
-    appState.useDemo = true;
-    updateToggleButton();
-    applySnapshot(demoData);
+    // Don't automatically switch to demo mode if already connected
+    // Only switch to demo mode on initial load or when manually triggered
+    if (!appState.snapshot) {
+      appState.useDemo = true;
+      updateToggleButton();
+      applySnapshot(demoData);
+    }
     console.error(error);
   }
 }
@@ -90,22 +94,39 @@ function connectToEvents() {
 
   events.onerror = () => {
     appState.connection = "reconnecting";
-    if (!appState.useDemo) {
-      appState.useDemo = true;
-      updateToggleButton();
-      applySnapshot(demoData);
-    }
+    // Don't automatically switch to demo mode if SSE connection fails
+    // Stay in current mode unless user manually toggles
   };
 }
 
 function toggleDemoMode() {
-  appState.useDemo = !appState.useDemo;
-  updateToggleButton();
-  
   if (appState.useDemo) {
-    applySnapshot(demoData);
+    // Try to connect to OpenClaw first
+    testOpenClawConnection().then(success => {
+      if (success) {
+        appState.useDemo = false;
+        updateToggleButton();
+        refreshSnapshot();
+      } else {
+        // Connection failed, stay in demo mode
+        alert('Failed to connect to OpenClaw service. Please check your connection and try again.');
+      }
+    });
   } else {
-    refreshSnapshot();
+    // Switch to demo mode
+    appState.useDemo = true;
+    updateToggleButton();
+    applySnapshot(demoData);
+  }
+}
+
+async function testOpenClawConnection() {
+  try {
+    const response = await fetch("/api/snapshot", { cache: "no-store", timeout: 5000 });
+    return response.ok;
+  } catch (error) {
+    console.error('Connection test failed:', error);
+    return false;
   }
 }
 
