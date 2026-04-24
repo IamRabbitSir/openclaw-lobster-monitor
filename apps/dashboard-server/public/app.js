@@ -1,6 +1,7 @@
 const elements = {
   agentsGrid: document.getElementById("agents-grid"),
   signalsCounter: document.querySelector(".voxyz-signals-counter"),
+  toggleButton: document.getElementById("toggle-demo"),
 };
 
 const agentRoles = {
@@ -11,14 +12,39 @@ const agentRoles = {
   Guide: "Community & Support"
 };
 
+const demoData = {
+  summary: {
+    agentCount: 5,
+    runningCount: 2,
+    waitingCount: 1,
+    errorCount: 0,
+    tokenTotals: { total: 1234 },
+    sourceCount: 1,
+    freshSourceCount: 1
+  },
+  agents: [
+    { id: "nexus-1", name: "Nexus", status: "Resting" },
+    { id: "scout-1", name: "Scout", status: "Researching" },
+    { id: "quill-1", name: "Quill", status: "Writing" },
+    { id: "forge-1", name: "Forge", status: "Analyzing" },
+    { id: "guide-1", name: "Guide", status: "Resting" }
+  ]
+};
+
 const appState = {
   snapshot: null,
   connection: "connecting",
+  useDemo: false,
 };
 
 init();
 
 async function init() {
+  // Add event listener for toggle button
+  if (elements.toggleButton) {
+    elements.toggleButton.addEventListener("click", toggleDemoMode);
+  }
+  
   await refreshSnapshot();
   connectToEvents();
 }
@@ -30,9 +56,14 @@ async function refreshSnapshot() {
       throw new Error(`Snapshot request failed with ${response.status}`);
     }
 
+    appState.useDemo = false;
+    updateToggleButton();
     applySnapshot(await response.json());
   } catch (error) {
     appState.connection = "offline";
+    appState.useDemo = true;
+    updateToggleButton();
+    applySnapshot(demoData);
     console.error(error);
   }
 }
@@ -42,10 +73,14 @@ function connectToEvents() {
 
   events.onopen = () => {
     appState.connection = "live";
+    appState.useDemo = false;
+    updateToggleButton();
   };
 
   events.addEventListener("snapshot", (event) => {
     appState.connection = "live";
+    appState.useDemo = false;
+    updateToggleButton();
     applySnapshot(JSON.parse(event.data));
   });
 
@@ -55,7 +90,29 @@ function connectToEvents() {
 
   events.onerror = () => {
     appState.connection = "reconnecting";
+    if (!appState.useDemo) {
+      appState.useDemo = true;
+      updateToggleButton();
+      applySnapshot(demoData);
+    }
   };
+}
+
+function toggleDemoMode() {
+  appState.useDemo = !appState.useDemo;
+  updateToggleButton();
+  
+  if (appState.useDemo) {
+    applySnapshot(demoData);
+  } else {
+    refreshSnapshot();
+  }
+}
+
+function updateToggleButton() {
+  if (elements.toggleButton) {
+    elements.toggleButton.textContent = appState.useDemo ? "Connect to OpenClaw" : "Use Demo Data";
+  }
 }
 
 function applySnapshot(snapshot) {

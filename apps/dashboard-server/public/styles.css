@@ -110,6 +110,12 @@ html, body {
   font-size: 14px;
 }
 
+.voxyz-button-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
 .voxyz-office-button {
   background-color: var(--text-light);
   color: var(--bg-dark);
@@ -124,6 +130,23 @@ html, body {
 
 .voxyz-office-button:hover {
   background-color: rgba(255, 255, 255, 0.8);
+}
+
+.voxyz-toggle-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-light);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.voxyz-toggle-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .voxyz-agents-grid {
@@ -238,6 +261,18 @@ html, body {
 
   .voxyz-status-badges {
     flex-wrap: wrap;
+  }
+
+  .voxyz-button-group {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .voxyz-office-button,
+  .voxyz-toggle-button {
+    width: 100%;
+    justify-content: center;
   }
 
   .voxyz-agents-grid {
