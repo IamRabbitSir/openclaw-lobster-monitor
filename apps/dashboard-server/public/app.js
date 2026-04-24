@@ -77,19 +77,26 @@ function connectToEvents() {
 
   events.onopen = () => {
     appState.connection = "live";
-    appState.useDemo = false;
-    updateToggleButton();
+    // Only switch out of demo mode if not explicitly in demo mode
+    if (!appState.useDemo) {
+      updateToggleButton();
+    }
   };
 
   events.addEventListener("snapshot", (event) => {
     appState.connection = "live";
-    appState.useDemo = false;
-    updateToggleButton();
-    applySnapshot(JSON.parse(event.data));
+    // Only apply real data if not in demo mode
+    if (!appState.useDemo) {
+      updateToggleButton();
+      applySnapshot(JSON.parse(event.data));
+    }
   });
 
   events.addEventListener("heartbeat", (event) => {
-    applySnapshot(JSON.parse(event.data));
+    // Only apply heartbeat data if not in demo mode
+    if (!appState.useDemo) {
+      applySnapshot(JSON.parse(event.data));
+    }
   });
 
   events.onerror = () => {
