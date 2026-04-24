@@ -1,0 +1,109 @@
+{
+  "id": "openclaw-lobster-monitor",
+  "name": "OpenClaw Lobster Monitor",
+  "description": "Read-only monitor exporter for the public lobster dashboard.",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "serverUrl": {
+        "type": "string",
+        "minLength": 1
+      },
+      "ingestToken": {
+        "type": "string",
+        "minLength": 1
+      },
+      "sourceId": {
+        "type": "string"
+      },
+      "sourceLabel": {
+        "type": "string"
+      },
+      "pollIntervalMs": {
+        "type": "number",
+        "minimum": 1000,
+        "maximum": 600000
+      },
+      "eventDebounceMs": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 5000
+      },
+      "requestTimeoutMs": {
+        "type": "number",
+        "minimum": 500,
+        "maximum": 60000
+      },
+      "cliTimeoutMs": {
+        "type": "number",
+        "minimum": 500,
+        "maximum": 60000
+      },
+      "cliPath": {
+        "type": "string"
+      },
+      "enableCli": {
+        "type": "boolean"
+      },
+      "tags": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "maxItems": 8
+      }
+    },
+    "required": [
+      "serverUrl",
+      "ingestToken"
+    ]
+  },
+  "uiHints": {
+    "serverUrl": {
+      "label": "Dashboard URL",
+      "placeholder": "https://monitor.example.com",
+      "help": "Public dashboard base URL. The plugin posts snapshots to /api/ingest."
+    },
+    "ingestToken": {
+      "label": "Ingest Token",
+      "sensitive": true,
+      "help": "Shared secret used by the public monitor server."
+    },
+    "sourceId": {
+      "label": "Source ID",
+      "placeholder": "office-gateway"
+    },
+    "sourceLabel": {
+      "label": "Source Label",
+      "placeholder": "Office Gateway"
+    },
+    "pollIntervalMs": {
+      "label": "CLI Reconcile Interval (ms)",
+      "help": "Low-frequency background reconciliation interval for OpenClaw CLI. Realtime status updates come from event hooks."
+    },
+    "eventDebounceMs": {
+      "label": "Event Debounce (ms)",
+      "help": "Small debounce window used to coalesce bursts of status events before uploading."
+    },
+    "requestTimeoutMs": {
+      "label": "Request Timeout (ms)"
+    },
+    "cliTimeoutMs": {
+      "label": "CLI Timeout (ms)",
+      "help": "Upper bound for each OpenClaw CLI probe. Slow commands are skipped to keep the dashboard responsive."
+    },
+    "cliPath": {
+      "label": "OpenClaw CLI Path",
+      "placeholder": "openclaw"
+    },
+    "enableCli": {
+      "label": "Use OpenClaw CLI",
+      "help": "When disabled, the plugin reports config-derived agent info only."
+    },
+    "tags": {
+      "label": "Tags",
+      "help": "Optional tags for grouping this source in the monitor."
+    }
+  }
+}

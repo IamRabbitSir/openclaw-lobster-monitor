@@ -1,0 +1,23 @@
+monitor.example.com {
+  encode gzip zstd
+
+  @sse path /api/events
+  reverse_proxy @sse 127.0.0.1:8787 {
+    header_up Host {host}
+    header_up X-Forwarded-For {remote_host}
+    transport http {
+      keepalive 30s
+    }
+  }
+
+  reverse_proxy 127.0.0.1:8787 {
+    header_up Host {host}
+    header_up X-Forwarded-For {remote_host}
+  }
+
+  # If you want the dashboard to require login without changing app code:
+  # basicauth {
+  #   ops JDJhJDE0JHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eA==
+  # }
+}
+

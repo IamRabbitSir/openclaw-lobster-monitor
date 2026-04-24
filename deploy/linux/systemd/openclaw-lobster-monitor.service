@@ -1,0 +1,26 @@
+[Unit]
+Description=OpenClaw Lobster Monitor
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=openclaw-monitor
+Group=openclaw-monitor
+WorkingDirectory=/opt/openclaw-lobster-monitor/apps/dashboard-server
+EnvironmentFile=/etc/openclaw-lobster-monitor/dashboard.env
+ExecStart=/usr/bin/node /opt/openclaw-lobster-monitor/apps/dashboard-server/server.js
+Restart=always
+RestartSec=3
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/openclaw-lobster-monitor
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

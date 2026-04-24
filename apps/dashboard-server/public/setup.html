@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OpenClaw Lobster Monitor Setup</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/setup.css" />
+  </head>
+  <body class="office-body">
+    <div class="starfield" aria-hidden="true"></div>
+
+    <div class="screen office-screen setup-screen">
+      <header class="window-panel masthead-panel setup-masthead">
+        <div class="window-toolbar">
+          <div class="toolbar-dots" aria-hidden="true">
+            <span class="dot dot-coral"></span>
+            <span class="dot dot-amber"></span>
+            <span class="dot dot-teal"></span>
+          </div>
+          <p class="window-code">STAR OFFICE / ONE-CLICK DEPLOYMENT DECK</p>
+          <div class="toolbar-actions">
+            <a class="toolbar-link" href="/">返回监控面板</a>
+          </div>
+        </div>
+
+        <div class="setup-header-grid">
+          <section>
+            <p class="eyebrow">ONE-CLICK SETUP</p>
+            <h1>部署控制台</h1>
+            <p class="subcopy">
+              这个页面只负责生成部署命令和配置片段，不会从浏览器直接控制 OpenClaw。默认推荐 HTTP 80 端口直连；如果你有域名，再切到 HTTPS 即可。
+            </p>
+            <div class="hero-pills">
+              <span class="hero-pill hero-pill-safe">Read-only monitor</span>
+              <span class="hero-pill hero-pill-live">Setup wizard</span>
+            </div>
+          </section>
+
+          <section class="setup-token-card">
+            <p class="panel-label">System Token</p>
+            <h2>自动生成的 INGEST_TOKEN</h2>
+            <p class="subcopy compact-copy">
+              token 由系统自动生成并持久化。当前页面会直接拿这个 token 生成 OpenClaw 客户端安装命令，不再要求手动填写。
+            </p>
+            <div class="token-row">
+              <input id="ingest-token" type="text" readonly />
+              <button class="copy-btn" data-copy-target="ingest-token">复制 Token</button>
+            </div>
+            <div class="token-meta">
+              <span class="hero-pill hero-pill-muted" id="token-origin-badge">Loading token</span>
+              <span class="token-hint" id="token-origin-text">正在读取当前服务端 token...</span>
+            </div>
+          </section>
+        </div>
+      </header>
+
+      <main class="setup-layout">
+        <section class="window-panel setup-form-panel">
+          <div class="window-toolbar">
+            <div class="toolbar-dots" aria-hidden="true">
+              <span class="dot dot-teal"></span>
+            </div>
+            <p class="window-code">ACCESS PROFILE / TARGET SETTINGS</p>
+          </div>
+
+          <div class="step-stack">
+            <article class="step-card">
+              <div class="step-head">
+                <span class="step-index">01</span>
+                <div>
+                  <p class="panel-label">Access Mode</p>
+                  <h2>访问方式</h2>
+                </div>
+              </div>
+
+              <label class="field">
+                <span>部署模式</span>
+                <select id="deploy-mode">
+                  <option value="direct-http">HTTP（推荐，默认 80 端口，支持 IP）</option>
+                  <option value="caddy-https">HTTPS（需要域名）</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>公网地址或域名</span>
+                <input id="public-host" type="text" placeholder="例如 203.0.113.10 或 monitor.example.com" />
+              </label>
+
+              <div class="field-grid">
+                <label class="field">
+                  <span>外部访问端口</span>
+                  <input id="public-port" type="number" min="1" max="65535" value="80" />
+                </label>
+
+                <label class="field">
+                  <span>服务监听端口</span>
+                  <input id="listen-port" type="number" min="1" max="65535" value="80" />
+                </label>
+              </div>
+
+              <label class="field">
+                <span>服务器仓库目录</span>
+                <input id="repo-dir" type="text" value="/opt/openclaw-lobster-monitor" />
+              </label>
+
+              <div class="preview-card">
+                <span class="panel-label">Access Preview</span>
+                <strong id="access-preview">http://127.0.0.1</strong>
+                <p>无域名时推荐直接用 IP + HTTP 80。这样最低配服务器也能部署，不依赖 Docker 和 SSL 证书。</p>
+              </div>
+            </article>
+
+            <article class="step-card">
+              <div class="step-head">
+                <span class="step-index">02</span>
+                <div>
+                  <p class="panel-label">OpenClaw Node</p>
+                  <h2>客户端标识</h2>
+                </div>
+              </div>
+
+              <label class="field">
+                <span>Source ID</span>
+                <input id="source-id" type="text" value="home-gateway" />
+              </label>
+
+              <label class="field">
+                <span>Source Label</span>
+                <input id="source-label" type="text" value="Home Gateway" />
+              </label>
+
+              <label class="field">
+                <span>OpenClaw 配置文件路径</span>
+                <input id="openclaw-config" type="text" value="$HOME/.openclaw/openclaw.json" />
+              </label>
+            </article>
+          </div>
+        </section>
+
+        <section class="setup-output">
+          <section class="window-panel">
+            <div class="window-toolbar">
+              <div class="toolbar-dots" aria-hidden="true">
+                <span class="dot dot-amber"></span>
+              </div>
+              <p class="window-code">STEP 1 / CLONE AND INSTALL SERVER</p>
+              <button class="copy-btn" data-copy-target="server-command">复制</button>
+            </div>
+            <textarea id="server-command" class="command-box tall" readonly></textarea>
+          </section>
+
+          <section class="window-panel">
+            <div class="window-toolbar">
+              <div class="toolbar-dots" aria-hidden="true">
+                <span class="dot dot-teal"></span>
+              </div>
+              <p class="window-code">SERVER ENV / GENERATED PREVIEW</p>
+              <button class="copy-btn" data-copy-target="server-env-preview">复制</button>
+            </div>
+            <textarea id="server-env-preview" class="command-box" readonly></textarea>
+          </section>
+
+          <section class="window-panel">
+            <div class="window-toolbar">
+              <div class="toolbar-dots" aria-hidden="true">
+                <span class="dot dot-teal"></span>
+              </div>
+              <p class="window-code">STEP 2 / INSTALL OPENCLAW CLIENT</p>
+            </div>
+            <div class="command-grid">
+              <section class="command-card">
+                <div class="command-card-head">
+                  <div>
+                    <p class="panel-label">OpenClaw Linux</p>
+                    <h2>Linux / macOS</h2>
+                  </div>
+                  <button class="copy-btn" data-copy-target="linux-client-command">复制</button>
+                </div>
+                <textarea id="linux-client-command" class="command-box" readonly></textarea>
+              </section>
+
+              <section class="command-card">
+                <div class="command-card-head">
+                  <div>
+                    <p class="panel-label">OpenClaw Windows</p>
+                    <h2>Windows PowerShell</h2>
+                  </div>
+                  <button class="copy-btn" data-copy-target="windows-client-command">复制</button>
+                </div>
+                <textarea id="windows-client-command" class="command-box" readonly></textarea>
+              </section>
+            </div>
+          </section>
+
+          <section class="window-panel">
+            <div class="window-toolbar">
+              <div class="toolbar-dots" aria-hidden="true">
+                <span class="dot dot-coral"></span>
+              </div>
+              <p class="window-code">FALLBACK / OPENCLAW CONFIG SNIPPET</p>
+              <button class="copy-btn" data-copy-target="config-snippet">复制</button>
+            </div>
+            <textarea id="config-snippet" class="command-box tall" readonly></textarea>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/setup.js"></script>
+  </body>
+</html>

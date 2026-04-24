@@ -1,0 +1,15 @@
+{
+  "name": "@openclaw-lobster-monitor/plugin",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Read-only OpenClaw plugin that collects agent state and pushes it to the lobster monitor dashboard.",
+  "peerDependencies": {
+    "openclaw": ">=2026.1.29"
+  },
+  "openclaw": {
+    "extensions": [
+      "./index.js"
+    ]
+  }
+}

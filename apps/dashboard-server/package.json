@@ -1,0 +1,13 @@
+{
+  "name": "@openclaw-lobster-monitor/dashboard-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Public dashboard server for monitoring OpenClaw agents with a pixel-art lobster UI.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  }
+}

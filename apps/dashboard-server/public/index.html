@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OpenClaw Lobster Monitor</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="office-body">
+    <div class="starfield" aria-hidden="true"></div>
+
+    <div class="screen office-screen">
+      <header class="window-panel masthead-panel">
+        <div class="window-toolbar">
+          <div class="toolbar-dots" aria-hidden="true">
+            <span class="dot dot-coral"></span>
+            <span class="dot dot-amber"></span>
+            <span class="dot dot-teal"></span>
+          </div>
+          <p class="window-code">STAR OFFICE / OPENCLAW LOBSTER OBSERVATORY</p>
+          <div class="toolbar-actions">
+            <a class="toolbar-link" href="/setup">部署引导</a>
+          </div>
+        </div>
+
+        <div class="masthead-grid">
+          <section class="masthead-copy">
+            <p class="eyebrow">OPENCLAW READ-ONLY MONITOR</p>
+            <h1>Lobster Home Office</h1>
+            <p class="subcopy">
+              参考 Star Office UI 的“星际办公室”氛围重新整理界面，外层像观测甲板，内层仍是家庭像素房间。每只龙虾代表一个
+              OpenClaw agent，面板只做状态监控，不提供任何控制入口。
+            </p>
+            <div class="hero-pills">
+              <span class="hero-pill hero-pill-safe">Monitor Only</span>
+              <span class="hero-pill hero-pill-live" id="connection-badge">Connecting</span>
+              <span class="hero-pill hero-pill-muted" id="mode-badge">No Data</span>
+            </div>
+          </section>
+
+          <section class="metric-grid" aria-label="Monitor summary">
+            <article class="metric-card">
+              <span>Agent 总数</span>
+              <strong id="metric-agents">0</strong>
+            </article>
+            <article class="metric-card">
+              <span>运行中</span>
+              <strong id="metric-running">0</strong>
+            </article>
+            <article class="metric-card">
+              <span>等待中</span>
+              <strong id="metric-waiting">0</strong>
+            </article>
+            <article class="metric-card">
+              <span>异常中</span>
+              <strong id="metric-errors">0</strong>
+            </article>
+            <article class="metric-card">
+              <span>Token 总量</span>
+              <strong id="metric-tokens">0</strong>
+            </article>
+            <article class="metric-card">
+              <span>节点数</span>
+              <strong id="metric-sources">0</strong>
+            </article>
+          </section>
+        </div>
+      </header>
+
+      <main class="dashboard-grid">
+        <section class="window-panel scene-panel">
+          <div class="window-toolbar">
+            <div class="toolbar-dots" aria-hidden="true">
+              <span class="dot dot-teal"></span>
+              <span class="dot dot-amber"></span>
+            </div>
+            <p class="window-code">HOME CABIN / LIVE PIXEL SCENE</p>
+            <span class="toolbar-note" id="scene-caption">等待第一个 OpenClaw 节点接入</span>
+          </div>
+
+          <div class="scene-grid">
+            <div class="scene-stage">
+              <canvas id="pixel-scene" width="512" height="352" aria-label="Pixel lobster scene"></canvas>
+            </div>
+
+            <aside class="scene-sidebar">
+              <article class="intel-card">
+                <p class="panel-label">Scene Feed</p>
+                <h2>家庭工作舱</h2>
+                <p class="scene-summary" id="scene-summary">
+                  等待首个快照，届时龙虾会按 agent 状态在像素房间里移动、等待、告警或离线。
+                </p>
+              </article>
+
+              <article class="intel-card">
+                <p class="panel-label">Status Mapping</p>
+                <h2>龙虾状态图例</h2>
+                <div class="legend-list">
+                  <div><span class="swatch running"></span>运行中</div>
+                  <div><span class="swatch idle"></span>空闲</div>
+                  <div><span class="swatch waiting"></span>等待中</div>
+                  <div><span class="swatch error"></span>异常</div>
+                  <div><span class="swatch offline"></span>离线 / 过期</div>
+                </div>
+              </article>
+
+              <article class="intel-card">
+                <p class="panel-label">Safety Rail</p>
+                <h2>权限边界</h2>
+                <p class="scene-summary">
+                  浏览器只有读取 `/api/snapshot` 和 `/api/events` 的能力。写入端只有插件侧的 `POST /api/ingest`，没有反向控制 agent 的链路。
+                </p>
+                <p class="timestamp" id="last-updated">等待首次快照...</p>
+              </article>
+            </aside>
+          </div>
+        </section>
+
+        <section class="column-stack">
+          <section class="window-panel">
+            <div class="window-toolbar">
+              <div class="toolbar-dots" aria-hidden="true">
+                <span class="dot dot-teal"></span>
+              </div>
+              <p class="window-code">SOURCE DECK / BOUND GATEWAYS</p>
+            </div>
+            <div id="source-list" class="stack-list empty-state">等待数据源接入...</div>
+          </section>
+
+          <section class="window-panel">
+            <div class="window-toolbar">
+              <div class="toolbar-dots" aria-hidden="true">
+                <span class="dot dot-amber"></span>
+              </div>
+              <p class="window-code">LOBSTER ROSTER / AGENT CARDS</p>
+            </div>
+            <div id="agent-list" class="stack-list empty-state">等待 agent 快照...</div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

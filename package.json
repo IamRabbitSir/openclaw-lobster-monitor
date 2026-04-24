@@ -1,0 +1,17 @@
+{
+  "name": "openclaw-lobster-monitor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Read-only OpenClaw agent monitor with a pixel-art lobster dashboard and an OpenClaw plugin collector.",
+  "workspaces": [
+    "apps/dashboard-server",
+    "plugins/openclaw-lobster-monitor"
+  ],
+  "scripts": {
+    "dev": "node apps/dashboard-server/server.js",
+    "start": "node apps/dashboard-server/server.js"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  }
+}
